@@ -2,7 +2,7 @@
 
 import datetime
 from pkg_resources import iter_entry_points
-
+import re
 import six
 
 from sqlalchemy import Column, MetaData, Table, create_engine, dialects
@@ -56,8 +56,9 @@ def make_column(column, no_constraints=False):
             sql_type_kwargs['length'] = column.max_length()
 
         sql_column_kwargs['nullable'] = column.has_nulls()
-
-    return Column(column.name, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
+    columnName = re.sub('[\\W]', '', column.name.title());
+    
+    return Column(columnName, sql_column_type(**sql_type_kwargs), **sql_column_kwargs)
 
 
 def get_connection(connection_string):
